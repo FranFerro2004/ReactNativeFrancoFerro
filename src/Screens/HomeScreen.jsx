@@ -1,12 +1,18 @@
 import React from 'react';
 import { View, Text, FlatList, TouchableOpacity, StyleSheet } from 'react-native';
 import ItemsCategories from '../data/ItemsCategories.json';
+import Counter from '../Components/Counter'
+
+
+
 
 const HomeScreen = ({ navigation }) => {
     const categories = [...ItemsCategories, "all"];
 
     return (
         <View style={styles.container}>
+            <Counter/>
+
             <FlatList
                 data={categories}
                 keyExtractor={(item, index) => index.toString()}
@@ -19,7 +25,9 @@ const HomeScreen = ({ navigation }) => {
                     </TouchableOpacity>
                 )}
             />
+
         </View>
+        
     );
 };
 

@@ -1,13 +1,23 @@
-import React from 'react'
-import { useState, useEffect } from 'react'
-import { View, Text, FlatList, Image, StyleSheet } from 'react-native'
-import ItemsInfo from '../data/ItemsInfo.json'
+import React, { useState, useEffect } from 'react';
+import { View, Text, FlatList, Image, StyleSheet, TouchableOpacity } from 'react-native';
+import ItemsInfo from '../data/ItemsInfo.json';
+import { itemIdSelected } from '../Features/Shop/shopSlice';
+import { useDispatch } from 'react-redux';
 
-const ItemListCategory = ({ route }) => {
+const ItemListCategory = ({ navigation ,route }) => {
     const { category } = route.params;
 
+    const dispatch = useDispatch();
+
     const [filteredItems, setFilteredItems] = useState([])
-    
+
+    const handleItemCard = (id) => {
+        dispatch(itemIdSelected(id))
+        navigation.navigate('ItemCard', { itemIdToShow: id })
+
+    }
+
+
     useEffect(() => {
         if (category === "all") {
             setFilteredItems(ItemsInfo);
@@ -16,8 +26,6 @@ const ItemListCategory = ({ route }) => {
             setFilteredItems(categories);
         }
     }, [category]);
-    
-    
 
     return (
         <View style={styles.container}>
@@ -25,17 +33,20 @@ const ItemListCategory = ({ route }) => {
             <FlatList
                 data={filteredItems}
                 renderItem={({ item }) => (
-                    <View style={styles.itemContainer}>
+                    <TouchableOpacity 
+                        style={styles.itemContainer}
+                        onPress={() => handleItemCard(item.id)}
+                    >
                         <Image source={{ uri: item.thumbnail }} style={styles.itemImage} />
                         <Text style={styles.itemTitle}>{item.title}</Text>
                         <Text style={styles.itemPrice}>Precio: ${item.price}</Text>
-                    </View>
+                    </TouchableOpacity >
                 )}
                 keyExtractor={item => item.id.toString()}
             />
         </View>
-    )
-}
+    );
+};
 
 const styles = StyleSheet.create({
     container: {
@@ -68,4 +79,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default ItemListCategory
+export default ItemListCategory;

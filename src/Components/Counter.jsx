@@ -58,7 +58,6 @@ const styles = StyleSheet.create({
         flexDirection: "column",
         justifyContent: "center",
         alignItems: "center",
-        
         padding: 10,
     },
     buttonsContainer: {
@@ -84,7 +83,6 @@ const styles = StyleSheet.create({
     },
     buttonText: {
         fontSize: 18,
-        fontFamily: "Josefin",
     }
 })
     

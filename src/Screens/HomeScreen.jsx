@@ -1,7 +1,9 @@
 import React from 'react';
 import { View, Text, FlatList, TouchableOpacity, StyleSheet } from 'react-native';
 import ItemsCategories from '../data/ItemsCategories.json';
-import Counter from '../Components/Counter'
+import { useDispatch } from 'react-redux';
+import { setCatergorySelected } from '../Features/Shop/shopSlice';
+
 
 
 
@@ -9,9 +11,16 @@ import Counter from '../Components/Counter'
 const HomeScreen = ({ navigation }) => {
     const categories = [...ItemsCategories, "all"];
 
+    const dispatch = useDispatch()
+
+    const handleSetCategory = (item) => {
+        dispatch(setCatergorySelected(item))
+        navigation.navigate('ItemList', { category: item })
+
+    };
+
     return (
         <View style={styles.container}>
-            <Counter/>
 
             <FlatList
                 data={categories}
@@ -19,7 +28,7 @@ const HomeScreen = ({ navigation }) => {
                 renderItem={({ item }) => (
                     <TouchableOpacity
                         style={styles.categoryItem}
-                        onPress={() => { navigation.navigate('ItemList', { category: item }) }}
+                        onPress={() => handleSetCategory(item)}
                     >
                         <Text style={styles.categoryText}>{item}</Text>
                     </TouchableOpacity>

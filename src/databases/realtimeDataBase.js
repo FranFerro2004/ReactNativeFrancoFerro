@@ -1,0 +1,1 @@
+export const baseUrl =  "https://react-native-ferro-default-rtdb.firebaseio.com/"

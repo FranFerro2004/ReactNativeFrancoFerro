@@ -1,13 +1,17 @@
+import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query";
+import { baseUrl } from "../databases/realtimeDataBase";
+
+
 export const shopApi = createApi({
     baseQuery: fetchBaseQuery({baseUrl: baseUrl}),
 
     endpoints: (builder) => ({
-        getProductsByCategory: builder.query({
-            query: (category) => `products.json?orderBy="category"&equalTo="${category}"`
+        getCategories: builder.query({
+            query: () => `categories.json`
         }),
 
-        getCategories: builder.quey({
-            query: () => `categories.json`
+        getProductsByCategory: builder.query({
+            query: (category) => `products.json?orderBy="category"&equalTo="${category}"`
         }),
 
         getProductById: builder.query({
@@ -16,4 +20,5 @@ export const shopApi = createApi({
     })
 });
 
+export const{ useGetCategoriesQuery, useGetProductsByCategoryQuery, useGetProductByIdQuery } = shopApi 
 

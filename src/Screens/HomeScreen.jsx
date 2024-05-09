@@ -1,30 +1,30 @@
 import React from 'react';
-import { View, Text, FlatList, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, FlatList, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import ItemsCategories from '../data/ItemsCategories.json';
 import { useDispatch } from 'react-redux';
 import { setCatergorySelected } from '../Features/Shop/shopSlice';
-
-
-
-
+import { useGetCategoriesQuery } from '../services/shopService';
 
 const HomeScreen = ({ navigation }) => {
-    const categories = [...ItemsCategories, "all"];
+    const { data: categories, error, isLoading } = useGetCategoriesQuery();
 
-    const dispatch = useDispatch()
+    const dispatch = useDispatch();
 
     const handleSetCategory = (item) => {
-        dispatch(setCatergorySelected(item))
-        navigation.navigate('ItemList', { category: item })
-
+        dispatch(setCatergorySelected(item));
+        navigation.navigate('ItemList', { category: item });
     };
+
+    if (error) {
+        Alert.alert('Error', 'Ha ocurrido un error al cargar las categorías.');
+        return null;
+    }
 
     return (
         <View style={styles.container}>
-
-            <FlatList
-                data={categories}
-                keyExtractor={(item, index) => index.toString()}
+            <FlatLis
+                data={categories} 
+                keyExtractor={(index) => index.toString()}
                 renderItem={({ item }) => (
                     <TouchableOpacity
                         style={styles.categoryItem}
@@ -34,9 +34,7 @@ const HomeScreen = ({ navigation }) => {
                     </TouchableOpacity>
                 )}
             />
-
         </View>
-        
     );
 };
 
@@ -46,6 +44,10 @@ const styles = StyleSheet.create({
         paddingHorizontal: 15,
         paddingTop: 15,
         paddingBottom: 15,
+    },
+    loadingContainer: {
+        justifyContent: 'center',
+        alignItems: 'center',
     },
     categoryItem: {
         flex: 1,

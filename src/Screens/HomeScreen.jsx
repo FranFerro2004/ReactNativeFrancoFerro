@@ -22,7 +22,7 @@ const HomeScreen = ({ navigation }) => {
 
     return (
         <View style={styles.container}>
-            <FlatLis
+            <FlatList
                 data={categories} 
                 keyExtractor={(index) => index.toString()}
                 renderItem={({ item }) => (

@@ -1,31 +1,28 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, FlatList, Image, StyleSheet, TouchableOpacity } from 'react-native';
-import ItemsInfo from '../data/ItemsInfo.json';
 import { itemIdSelected } from '../Features/Shop/shopSlice';
 import { useDispatch } from 'react-redux';
+import { useGetProductsByCategoryQuery } from '../services/shopService';
 
-const ItemListCategory = ({ navigation ,route }) => {
+const ItemListCategory = ({ navigation, route }) => {
     const { category } = route.params;
 
     const dispatch = useDispatch();
 
-    const [filteredItems, setFilteredItems] = useState([])
+    const { data: fetchedItems, isLoading } = useGetProductsByCategoryQuery(category);
 
-    const handleItemCard = (id) => {
-        dispatch(itemIdSelected(id))
-        navigation.navigate('ItemCard', { itemIdToShow: id })
-
-    }
-
+    const [filteredItems, setFilteredItems] = useState([]);
 
     useEffect(() => {
-        if (category === "all") {
-            setFilteredItems(ItemsInfo);
-        } else {
-            const categories = ItemsInfo.filter(item => item.category === category);
-            setFilteredItems(categories);
+        if (!isLoading && fetchedItems) {
+            setFilteredItems(fetchedItems);
         }
-    }, [category]);
+    }, [isLoading, fetchedItems]);
+
+    const handleItemCard = (id) => {
+        dispatch(itemIdSelected(id));
+        navigation.navigate('ItemCard', { itemIdToShow: id });
+    };
 
     return (
         <View style={styles.container}>
@@ -33,14 +30,14 @@ const ItemListCategory = ({ navigation ,route }) => {
             <FlatList
                 data={filteredItems}
                 renderItem={({ item }) => (
-                    <TouchableOpacity 
+                    <TouchableOpacity
                         style={styles.itemContainer}
                         onPress={() => handleItemCard(item.id)}
                     >
                         <Image source={{ uri: item.thumbnail }} style={styles.itemImage} />
                         <Text style={styles.itemTitle}>{item.title}</Text>
                         <Text style={styles.itemPrice}>Precio: ${item.price}</Text>
-                    </TouchableOpacity >
+                    </TouchableOpacity>
                 )}
                 keyExtractor={item => item.id.toString()}
             />

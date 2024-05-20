@@ -1,21 +1,25 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, FlatList, Image, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, FlatList, Image, StyleSheet, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { itemIdSelected } from '../Features/Shop/shopSlice';
 import { useDispatch } from 'react-redux';
 import { useGetProductsByCategoryQuery } from '../services/shopService';
 
 const ItemListCategory = ({ navigation, route }) => {
     const { category } = route.params;
-
     const dispatch = useDispatch();
 
-    const { data: fetchedItems, isLoading } = useGetProductsByCategoryQuery(category);
-
+    const { data: fetchedItems, isLoading, error } = useGetProductsByCategoryQuery(category);
     const [filteredItems, setFilteredItems] = useState([]);
 
     useEffect(() => {
+        console.log("Category:", category);
+        console.log("FetchedItems:", fetchedItems);
+    }, [category, fetchedItems]);
+
+    useEffect(() => {
         if (!isLoading && fetchedItems) {
-            setFilteredItems(fetchedItems);
+            const itemsArray = Array.isArray(fetchedItems) ? fetchedItems : Object.values(fetchedItems);
+            setFilteredItems(itemsArray);
         }
     }, [isLoading, fetchedItems]);
 
@@ -23,6 +27,22 @@ const ItemListCategory = ({ navigation, route }) => {
         dispatch(itemIdSelected(id));
         navigation.navigate('ItemCard', { itemIdToShow: id });
     };
+
+    if (isLoading) {
+        return (
+            <View style={styles.container}>
+                <ActivityIndicator size="large" color="#0000ff" />
+            </View>
+        );
+    }
+
+    if (error) {
+        return (
+            <View style={styles.container}>
+                <Text style={styles.errorText}>Error al obtener los datos</Text>
+            </View>
+        );
+    }
 
     return (
         <View style={styles.container}>
@@ -73,6 +93,10 @@ const styles = StyleSheet.create({
     itemPrice: {
         fontSize: 14,
         color: 'gray',
+    },
+    errorText: {
+        fontSize: 16,
+        color: 'red',
     },
 });
 

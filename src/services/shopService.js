@@ -15,8 +15,13 @@ export const shopApi = createApi({
         }),
 
         getProductById: builder.query({
-            query: (productId) => `products.json?orderBy="id"&equalTo=${productId}`
-        }) 
+            query: (productId) => `products.json?orderBy="id"&equalTo=${productId}`,
+            transformResponse: (response) => {
+                const responseTransformed = Object.values(response)
+                if (responseTransformed.length) return responseTransformed[0]
+                return null
+            }
+        })
     })
 });
 

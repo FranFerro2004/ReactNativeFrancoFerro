@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { View, Text, Image, StyleSheet, Pressable, ActivityIndicator } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import Counter from '../Components/Counter';
@@ -11,8 +11,6 @@ const ItemCard = ({ navigation, route }) => {
     const { itemIdToShow } = route.params;
 
     const { data, isLoading, error } = useGetProductByIdQuery(itemIdToShow);
-
-    console.log("Item:", data)
 
     if (isLoading) {
         return (
@@ -38,6 +36,17 @@ const ItemCard = ({ navigation, route }) => {
         );
     }
 
+    const handleAddToCart = () => {
+        dispatch(addItem({ 
+            id: data.id, 
+            title: data.title, 
+            price: data.price, 
+            thumbnail: data.thumbnail, 
+            user: "Luciano", 
+            quantity 
+        }));
+    };
+
     return (
         <View style={styles.card}>
             <Image source={{ uri: data.thumbnail }} style={styles.image} />
@@ -50,9 +59,9 @@ const ItemCard = ({ navigation, route }) => {
 
                 <Pressable 
                     style={styles.button}
-                    onPress={() => dispatch(addItem({ id: data.id, title: data.title, price: data.price, thumbnail: data.thumbnail, quantity }))}
+                    onPress={handleAddToCart}
                 >
-                    <Text>Añadir al Carrito</Text>
+                    <Text style={styles.buttonText}>Añadir al Carrito</Text>
                 </Pressable>
             </View>
         </View>
@@ -61,12 +70,10 @@ const ItemCard = ({ navigation, route }) => {
 
 const styles = StyleSheet.create({
     card: {
-        flexDirection: 'column',
+        flex: 1,
         backgroundColor: '#fff',
         borderRadius: 10,
         padding: 10,
-        height: '100%',
-        width: '100%',
     },
     image: {
         width: '100%',
@@ -75,23 +82,27 @@ const styles = StyleSheet.create({
         resizeMode: 'cover',
     },
     content: {
-        marginLeft: 10,
         marginTop: 10,
     },
     title: {
-        fontSize: 16,
+        fontSize: 20,
         fontWeight: 'bold',
     },
     price: {
-        fontSize: 14,
+        fontSize: 18,
         color: '#888',
     },
     button: {
-        marginTop: 10,
+        marginTop: 20,
         backgroundColor: '#ff6347',
         padding: 10,
         borderRadius: 5,
         alignItems: 'center',
+    },
+    buttonText: {
+        color: '#fff',
+        fontSize: 16,
+        fontWeight: 'bold',
     },
     loadingContainer: {
         flex: 1,

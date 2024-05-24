@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, ActivityIndicator } from 'react-native';
 import { useSingUpMutation } from '../services/authService';
+import { setUser } from '../Features/User/userSlice';
 
 const SignUpScreen = () => {
     const [email, setEmail] = useState("");

@@ -1,8 +1,10 @@
-/* import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, ActivityIndicator } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, ActivityIndicator, Pressable } from 'react-native';
+import { setUser } from '../Features/User/userSlice';
+import { useSignInMutation } from '../services/authService';
 
-const LoginScreen = () => {
+const LoginScreen = ({ navigation }) => {
     const dispatch = useDispatch();
     const [triggerSignIn, result] = useSignInMutation();
     const [email, setEmail] = useState('');
@@ -46,6 +48,10 @@ const LoginScreen = () => {
             </TouchableOpacity>
             {result.isLoading && <ActivityIndicator size="large" color="#0000ff" />}
             {result.isError && <Text style={styles.errorText}>Error al iniciar sesión. Intente nuevamente.</Text>}
+            
+            <Pressable onPress={() => navigation.navigate("SignUp")}>
+                    <Text>Sign up</Text>
+            </Pressable>
         </View>
     );
 };
@@ -91,14 +97,5 @@ const styles = StyleSheet.create({
     },
 });
 
-export default LoginScreen; */
+export default LoginScreen; 
 
-import React from 'react'
-
-const LoginScreen = () => {
-  return (
-    <div>LoginScreen</div>
-  )
-}
-
-export default LoginScreen

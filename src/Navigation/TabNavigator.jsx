@@ -8,15 +8,13 @@ const Tab = createBottomTabNavigator();
 
 const TabNavigator = () => {
     return (
-        <NavigationContainer>
             <Tab.Navigator screenOptions={{
             headerShown: false
             }}
             >
                 <Tab.Screen name='ShopTab' component={ShopStack} />
                 <Tab.Screen name='CartTab' component={CartStack} />
-            </Tab.Navigator>       
-        </NavigationContainer>
+            </Tab.Navigator>      
     )
 }
 

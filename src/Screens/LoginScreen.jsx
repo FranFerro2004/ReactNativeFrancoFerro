@@ -3,6 +3,7 @@ import { useDispatch } from 'react-redux';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, ActivityIndicator, Pressable } from 'react-native';
 import { setUser } from '../Features/User/userSlice';
 import { useSignInMutation } from '../services/authService';
+import { insertSession } from '../persistence';
 
 const LoginScreen = ({ navigation }) => {
     const dispatch = useDispatch();
@@ -10,15 +11,23 @@ const LoginScreen = ({ navigation }) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
+
     useEffect(() => {
-        if (result.isSuccess) {
-            dispatch(
-                setUser({
-                    email: result.data.email,
-                    idToken: result.data.idToken,
-                    localId: result.data.localId,
-                })
-            );
+        if (result.isSuccess && result.data) {
+            insertSession({
+                email: result.data.email,
+                localId: result.data.localId,
+                token: result.data.idToken,
+            })
+                .then((response) => {
+                    dispatch(
+                    setUser({
+                        email: result.data.email,
+                        idToken: result.data.idToken,
+                        localId: result.data.localId,
+                    })
+                );})
+            
         }
     }, [result]);
 

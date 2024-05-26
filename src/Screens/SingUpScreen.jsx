@@ -3,6 +3,7 @@ import { useDispatch } from 'react-redux';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, ActivityIndicator } from 'react-native';
 import { useSingUpMutation } from '../services/authService';
 import { setUser } from '../Features/User/userSlice';
+import { insertSession } from '../persistence';
 
 const SignUpScreen = () => {
     const [email, setEmail] = useState("");
@@ -17,13 +18,20 @@ const SignUpScreen = () => {
 
     useEffect(() => {
         if (result.isSuccess) {
-            dispatch(
-                setUser({
-                    email: result.data.email,
-                    idToken: result.data.idToken,
-                    localId: result.data.localId,
-                })
-            );
+            insertSession({
+                email: result.data.email,
+                localId: result.data.localId,
+                token: result.data.idToken,
+            })
+                .then((response) => {
+                    dispatch(
+                    setUser({
+                        email: result.data.email,
+                        idToken: result.data.idToken,
+                        localId: result.data.localId,
+                    })
+                );})
+            
         }
     }, [result, dispatch]);
 

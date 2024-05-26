@@ -4,8 +4,17 @@ import { SafeAreaView, StyleSheet, Platform } from 'react-native';
 import { Provider } from 'react-redux';
 import store from "./src/store"
 import Navigator from './src/Navigation/Navigator';
+import { initSQLiteDB } from './src/persistence';
 
-const Stack = createNativeStackNavigator(); 
+( async () => {
+  try {
+    const response = await initSQLiteDB()
+    console.log({responseCreatingDB: response})
+  } catch (error) {
+    console.log({errorCreatingDb: error})
+  }
+  
+})()
 
 export default function App() {
   

@@ -1,6 +1,10 @@
 import * as SQLite from 'expo-sqlite';
+import { Platform } from 'react-native';
 
-const db = SQLite.openDatabase("sessions.db")
+let db = null
+
+if(Platform.OS !== 'web') db = SQLite.openDatabase("sessions.db")
+
 
 export const initSQLiteDB = () => {
     const promise = new Promise((resolve, reject) => {
@@ -46,5 +50,22 @@ export const getSession = () => {
             )
         })
     })
+    return promise
+}
+
+export const truncateSessionsTable = () => {
+    
+    const promise = new Promise((resolve, reject) => {
+        db.transaction((tx) => {
+            
+            tx.executeSql(
+                "DELETE FROM sessions",
+                [], 
+                (_, result) => resolve(result), 
+                (_, error) => reject(error) 
+            )
+        })
+    })
+    
     return promise
 }

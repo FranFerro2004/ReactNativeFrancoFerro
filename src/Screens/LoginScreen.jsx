@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, ActivityIndicator, Pressable } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, ActivityIndicator, Pressable, Platform } from 'react-native';
 import { setUser } from '../Features/User/userSlice';
 import { useSignInMutation } from '../services/authService';
 import { insertSession } from '../persistence';
+
 
 const LoginScreen = ({ navigation }) => {
     const dispatch = useDispatch();
@@ -13,20 +14,25 @@ const LoginScreen = ({ navigation }) => {
 
 
     useEffect(() => {
+        
         if (result.isSuccess && result.data) {
-            insertSession({
-                email: result.data.email,
-                localId: result.data.localId,
-                token: result.data.idToken,
-            })
-                .then((response) => {
-                    dispatch(
-                    setUser({
-                        email: result.data.email,
-                        idToken: result.data.idToken,
-                        localId: result.data.localId,
-                    })
-                );})
+        ( async ()=> {
+            if (Platform.OS !== 'web'){
+                const response = await insertSession({
+                    email: result.data.email,
+                    localId: result.data.localId,
+                    token: result.data.idToken,
+                })
+            }
+            dispatch(
+                setUser({
+                    email: result.data.email,
+                    idToken: result.data.idToken,
+                    localId: result.data.localId,
+                })
+            );
+        })()
+            
             
         }
     }, [result]);

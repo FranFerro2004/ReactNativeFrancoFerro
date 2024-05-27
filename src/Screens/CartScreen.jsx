@@ -9,6 +9,9 @@ const CartScreen = () => {
     const total = useSelector(state => state.cart.value.total);
     const dispatch = useDispatch();
 
+
+    const user = useSelector(state => state.auth.value.user)
+
     const [triggerPost, result] = usePostOrderMutation()
 
     const handleRemoveItem = (id) => {
@@ -16,7 +19,7 @@ const CartScreen = () => {
     };
 
     const handleConfirmPurchase = () => {
-        triggerPost({total, cartItems: cart, user: 'Luciano'})
+        triggerPost({total, cartItems: cart, user: user})
         alert('Compra confirmada');
     };
 

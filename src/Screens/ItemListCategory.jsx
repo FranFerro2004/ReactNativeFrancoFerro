@@ -11,10 +11,6 @@ const ItemListCategory = ({ navigation, route }) => {
     const { data: fetchedItems, isLoading, error } = useGetProductsByCategoryQuery(category);
     const [filteredItems, setFilteredItems] = useState([]);
 
-    useEffect(() => {
-        console.log("Category:", category);
-        console.log("FetchedItems:", fetchedItems);
-    }, [category, fetchedItems]);
 
     useEffect(() => {
         if (!isLoading && fetchedItems) {
